@@ -110,7 +110,7 @@ function processaDados(response) {
     console.log(response);
     if (response.entities.hasOwnProperty('intent')) {
         if (response.entities.intent[0].value == 'proximidade' && response.entities.hasOwnProperty('place')) {
-            insertMap(response.entities.place);
+            insertMap('proximidade', response.entities.place);
         }
     }
 }
