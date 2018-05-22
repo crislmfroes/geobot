@@ -8,6 +8,8 @@ var WIT_TOKEN = '5BACP4L2GC3TENO3O6EDTRYNYOCAMD2R';
 
 var map;
 
+var location = new google.maps.LatLng(-32.0332, -52.0986);
+
 function formatAMPM(date) {
     var hours = date.getHours();
     var minutes = date.getMinutes();
@@ -36,14 +38,14 @@ function insertMap(options = undefined, places = []) {
             $("ul").append(control).scrollTop($("ul").prop('scrollHeight'));
             $(document).ready(function() {
                 map = new google.maps.Map(document.getElementById(id), {
-                    'zoom': 4,
-                    'center': new google.maps.LatLng(-32.0332, -52.0986)
+                    'zoom': 11,
+                    'center': location
                 });
                 if (options == 'proximidade') {
                     service = new google.maps.places.PlacesService(map);
                     for (place in places) {
                         request = {
-                            'location': new google.maps.LatLng(-32.0332, -52.0986),
+                            'location': location,
                             'radius': 1000,
                             'type': place.value
                         }
@@ -62,6 +64,7 @@ function insertMap(options = undefined, places = []) {
 }
 
 function createMarker(place, map) {
+    console.log(place);
     var marker = new google.maps.Marker({
         position: place.geometry.location,
         map: map
@@ -147,6 +150,11 @@ function initBot() {
 
     //-- Clear Chat
     resetChat();
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+        location.lat = position.coords.latitude;
+        location.lng = position.coords.longitude;
+    })
 
 }
 
