@@ -8,7 +8,10 @@ var WIT_TOKEN = '5BACP4L2GC3TENO3O6EDTRYNYOCAMD2R';
 
 var map;
 
-var location = new google.maps.LatLng(-32.0332, -52.0986);
+var location = {
+    'lat': -32.0332,
+    'lng': -52.0986
+}
 
 function formatAMPM(date) {
     var hours = date.getHours();
