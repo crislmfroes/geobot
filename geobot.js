@@ -12,47 +12,90 @@ function formatAMPM(date) {
     var ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0'+minutes : minutes;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
     var strTime = hours + ':' + minutes + ' ' + ampm;
     return strTime;
-}            
+}
+
+function insertMap(options = undefined, places = []) {
+    id = 'map' + Date.now();
+    control = '<li style="width:100%">' +
+        '<div class="msj macro">' +
+        '<div class="avatar"><img class="img-circle" style="width:100%;" src="' + you.avatar + '" /></div>' +
+        '<div id="' + id + '" class="map">' +
+        '</div>' +
+        '</div>' +
+        '</li>';
+    setTimeout(
+        function () {
+            $("ul").append(control).scrollTop($("ul").prop('scrollHeight'));
+        }, time);
+    var map = new google.maps.Map(document.getElementById(id), {
+        'zoom': 4,
+        'center': 'Rio Grande - RS'
+    })
+    if (options == 'proximidade') {
+        service = new google.maps.places.PlacesService(map);
+        for (place in places) {
+            request = {
+                'location': new google.maps.LatLng(-32.0332, -52.0986),
+                'radius': 1000,
+                'type': place.value
+            }
+            service.nearbySearch(request, function(results, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    for (var i = 0; i < results.length; i++) {
+                        createMarker(results[i], map);
+                    }
+                }
+            })
+        }
+    }
+}
+
+function createMarker(place, map) {
+    var marker = new google.maps.Marker({
+        position: place,
+        map: map
+    });
+}
 
 //-- No use time. It is a javaScript effect.
-function insertChat(who, text, time){
-    if (time === undefined){
+function insertChat(who, text, time) {
+    if (time === undefined) {
         time = 0;
     }
     var control = "";
     var date = formatAMPM(new Date());
-    
-    if (who == "me"){
+
+    if (who == "me") {
         control = '<li style="width:100%">' +
-                        '<div class="msj macro">' +
-                        '<div class="avatar"><img class="img-circle" style="width:100%;" src="'+ me.avatar +'" /></div>' +
-                            '<div class="text text-l">' +
-                                '<p>'+ text +'</p>' +
-                                '<p><small>'+date+'</small></p>' +
-                            '</div>' +
-                        '</div>' +
-                    '</li>';                    
-    }else{
+            '<div class="msj macro">' +
+            '<div class="avatar"><img class="img-circle" style="width:100%;" src="' + me.avatar + '" /></div>' +
+            '<div class="text text-l">' +
+            '<p>' + text + '</p>' +
+            '<p><small>' + date + '</small></p>' +
+            '</div>' +
+            '</div>' +
+            '</li>';
+    } else {
         control = '<li style="width:100%;">' +
-                        '<div class="msj-rta macro">' +
-                            '<div class="text text-r">' +
-                                '<p>'+text+'</p>' +
-                                '<p><small>'+date+'</small></p>' +
-                            '</div>' +
-                        '<div class="avatar" style="padding:0px 0px 0px 10px !important"><img class="img-circle" style="width:100%;" src="'+you.avatar+'" /></div>' +                                
-                  '</li>';
+            '<div class="msj-rta macro">' +
+            '<div class="text text-r">' +
+            '<p>' + text + '</p>' +
+            '<p><small>' + date + '</small></p>' +
+            '</div>' +
+            '<div class="avatar" style="padding:0px 0px 0px 10px !important"><img class="img-circle" style="width:100%;" src="' + you.avatar + '" /></div>' +
+            '</li>';
     }
     setTimeout(
-        function(){                        
+        function () {
             $("ul").append(control).scrollTop($("ul").prop('scrollHeight'));
         }, time);
-    
+
 }
 
-function resetChat(){
+function resetChat() {
     $("ul").empty();
 }
 
@@ -65,23 +108,8 @@ function processaDados(response) {
     }
 }
 
-function pegaLocaisPróximos(places) {
-    for (place in places) {
-        $.ajax({
-            url: 'https://maps.googleapis.com/maps/api/place/nearbysearch',
-            data: {
-                'key': 'AIzaSyCTJYc6VhF8Ayc91vjhoFFMi_4t7XWdFFg',
-                'location': {
-                    'latitude': -32.0332,
-                    'longitude': -52.0986
-                },
-                'radius': 1000
-            },
-            dataType: 'json',
-            method: 'GET',
-            success: processaLocais
-        });
-    }
+function mostraLocaisNoMapa(places) {
+
 }
 
 function processaLocais(response) {
@@ -102,21 +130,21 @@ function processaTexto(text) {
 }
 
 function initBot() {
-    $(".mytext").on("keydown", function(e){
-        if (e.which == 13){
+    $(".mytext").on("keydown", function (e) {
+        if (e.which == 13) {
             var text = $(this).val();
-            if (text !== ""){
-                insertChat("me", text);              
+            if (text !== "") {
+                insertChat("me", text);
                 $(this).val('');
                 processaTexto(text);
             }
         }
     });
-    
-    $('body > div > div > div:nth-child(2) > span').click(function(){
-        $(".mytext").trigger({type: 'keydown', which: 13, keyCode: 13});
+
+    $('body > div > div > div:nth-child(2) > span').click(function () {
+        $(".mytext").trigger({ type: 'keydown', which: 13, keyCode: 13 });
     })
-    
+
     //-- Clear Chat
     resetChat();
 }
