@@ -34,7 +34,7 @@ function insertMap(options = undefined, places = []) {
         }, time);
     var map = new google.maps.Map(document.getElementById(id), {
         'zoom': 4,
-        'center': 'Rio Grande - RS'
+        'center': new google.maps.LatLng(-32.0332, -52.0986)
     });
     if (options == 'proximidade') {
         service = new google.maps.places.PlacesService(map);
