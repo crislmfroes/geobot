@@ -6,6 +6,8 @@ you.avatar = "https://a11.t26.net/taringa/avatares/9/1/2/F/7/8/Demon_King1/48x48
 
 var WIT_TOKEN = '5BACP4L2GC3TENO3O6EDTRYNYOCAMD2R';
 
+var map;
+
 function formatAMPM(date) {
     var hours = date.getHours();
     var minutes = date.getMinutes();
@@ -32,7 +34,7 @@ function insertMap(options = undefined, places = []) {
         function () {
             $("ul").append(control).scrollTop($("ul").prop('scrollHeight'));
         }, time);
-    var map = new google.maps.Map(document.getElementById(id), {
+    map = new google.maps.Map(document.getElementById(id), {
         'zoom': 4,
         'center': new google.maps.LatLng(-32.0332, -52.0986)
     });
