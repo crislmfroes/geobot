@@ -6,8 +6,6 @@ you.avatar = "https://a11.t26.net/taringa/avatares/9/1/2/F/7/8/Demon_King1/48x48
 
 var WIT_TOKEN = '5BACP4L2GC3TENO3O6EDTRYNYOCAMD2R';
 
-var PLACES_TOKEN = 'AIzaSyCTJYc6VhF8Ayc91vjhoFFMi_4t7XWdFFg';
-
 function formatAMPM(date) {
     var hours = date.getHours();
     var minutes = date.getMinutes();
@@ -103,23 +101,26 @@ function processaTexto(text) {
     });
 }
 
-$(".mytext").on("keydown", function(e){
-    if (e.which == 13){
-        var text = $(this).val();
-        if (text !== ""){
-            insertChat("me", text);              
-            $(this).val('');
-            processaTexto(text);
+function initBot() {
+    $(".mytext").on("keydown", function(e){
+        if (e.which == 13){
+            var text = $(this).val();
+            if (text !== ""){
+                insertChat("me", text);              
+                $(this).val('');
+                processaTexto(text);
+            }
         }
-    }
-});
+    });
+    
+    $('body > div > div > div:nth-child(2) > span').click(function(){
+        $(".mytext").trigger({type: 'keydown', which: 13, keyCode: 13});
+    })
+    
+    //-- Clear Chat
+    resetChat();
+}
 
-$('body > div > div > div:nth-child(2) > span').click(function(){
-    $(".mytext").trigger({type: 'keydown', which: 13, keyCode: 13});
-})
-
-//-- Clear Chat
-resetChat();
 
 //-- Print Messages
 /*insertChat("me", "Hello Tom...", 0);  
