@@ -61,6 +61,7 @@ function insertMap(options = undefined, places = []) {
 }
 
 function createMarker(place, map) {
+    console.log(place);
     var marker = new google.maps.Marker({
         position: place,
         map: map
