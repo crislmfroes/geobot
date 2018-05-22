@@ -33,28 +33,29 @@ function insertMap(options = undefined, places = []) {
     setTimeout(
         function () {
             $("ul").append(control).scrollTop($("ul").prop('scrollHeight'));
-        }, time);
-    map = new google.maps.Map(document.getElementById(id), {
-        'zoom': 4,
-        'center': new google.maps.LatLng(-32.0332, -52.0986)
-    });
-    if (options == 'proximidade') {
-        service = new google.maps.places.PlacesService(map);
-        for (place in places) {
-            request = {
-                'location': new google.maps.LatLng(-32.0332, -52.0986),
-                'radius': 1000,
-                'type': place.value
-            }
-            service.nearbySearch(request, function(results, status) {
-                if (status == google.maps.places.PlacesServiceStatus.OK) {
-                    for (var i = 0; i < results.length; i++) {
-                        createMarker(results[i], map);
+            map = new google.maps.Map(document.getElementById(id), {
+                'zoom': 4,
+                'center': new google.maps.LatLng(-32.0332, -52.0986)
+            });
+            if (options == 'proximidade') {
+                service = new google.maps.places.PlacesService(map);
+                for (place in places) {
+                    request = {
+                        'location': new google.maps.LatLng(-32.0332, -52.0986),
+                        'radius': 1000,
+                        'type': place.value
                     }
+                    service.nearbySearch(request, function (results, status) {
+                        if (status == google.maps.places.PlacesServiceStatus.OK) {
+                            for (var i = 0; i < results.length; i++) {
+                                createMarker(results[i], map);
+                            }
+                        }
+                    })
                 }
-            })
-        }
-    }
+            }
+        }, time);
+
 }
 
 function createMarker(place, map) {
