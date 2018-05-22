@@ -22,10 +22,8 @@ function insertMap(options = undefined, places = []) {
     id = 'map' + Date.now();
     control = '<li style="width:100%">' +
         '<div class="msj macro">' +
-        '<div class="avatar"><img class="img-circle" style="width:100%;" src="' + you.avatar + '" /></div>' +
         '<div class="texr-r"'> +
         '<div id="' + id + '" class="map">' +
-        '</div>' +
         '</div>' +
         '</div>' +
         '</div>' +
