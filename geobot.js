@@ -18,11 +18,15 @@ function formatAMPM(date) {
 }
 
 function insertMap(options = undefined, places = []) {
+    time = 0;
     id = 'map' + Date.now();
     control = '<li style="width:100%">' +
         '<div class="msj macro">' +
         '<div class="avatar"><img class="img-circle" style="width:100%;" src="' + you.avatar + '" /></div>' +
+        '<div class="texr-r"'> +
         '<div id="' + id + '" class="map">' +
+        '</div>' +
+        '</div>' +
         '</div>' +
         '</div>' +
         '</li>';
@@ -103,17 +107,9 @@ function processaDados(response) {
     console.log(response);
     if (response.entities.hasOwnProperty('intent')) {
         if (response.entities.intent[0].value == 'proximidade' && response.entities.hasOwnProperty('place')) {
-            pegaLocaisPróximos(response.entities.place);
+            insertMap(response.entities.place);
         }
     }
-}
-
-function mostraLocaisNoMapa(places) {
-
-}
-
-function processaLocais(response) {
-    console.log(response);
 }
 
 function processaTexto(text) {
@@ -147,6 +143,7 @@ function initBot() {
 
     //-- Clear Chat
     resetChat();
+
 }
 
 
