@@ -22,7 +22,7 @@ function insertMap(options = undefined, places = []) {
     id = 'map' + Date.now();
     control = '<li style="width:100%">' +
         '<div class="msj macro">' +
-        '<div class="texr-r"'> +
+        '<div class="texr-r">' +
         '<div id="' + id + '" class="map">' +
         '</div>' +
         '</div>' +
@@ -35,7 +35,7 @@ function insertMap(options = undefined, places = []) {
     var map = new google.maps.Map(document.getElementById(id), {
         'zoom': 4,
         'center': 'Rio Grande - RS'
-    })
+    });
     if (options == 'proximidade') {
         service = new google.maps.places.PlacesService(map);
         for (place in places) {
