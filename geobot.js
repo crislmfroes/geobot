@@ -1,8 +1,8 @@
 var me = {};
-me.avatar = "https://lh6.googleusercontent.com/-lr2nyjhhjXw/AAAAAAAAAAI/AAAAAAAARmE/MdtfUmC0M4s/photo.jpg?sz=48";
+me.avatar = "img/user.png";
 
 var you = {};
-you.avatar = "https://a11.t26.net/taringa/avatares/9/1/2/F/7/8/Demon_King1/48x48_5C5.jpg";
+you.avatar = "img/bot.png";
 
 var WIT_TOKEN = '5BACP4L2GC3TENO3O6EDTRYNYOCAMD2R';
 
@@ -23,11 +23,12 @@ function insertMap(options = undefined, places = []) {
     time = 0;
     id = 'map' + Date.now();
     control = '<li style="width:100%">' +
-        '<div class="msj macro">' +
+        '<div class="msj-rta macro">' +
         '<div class="text texr-r">' +
         '<div id="' + id + '" class="map">' +
         '</div>' +
         '</div>' +
+        '<div class="avatar"><img class="img-circle" style="width:100%;" src="' + you.avatar + '" /></div>' +
         '</div>' +
         '</li>';
     setTimeout(
