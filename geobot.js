@@ -79,7 +79,7 @@ function pegaLocaisPróximos(places) {
                 },
                 'radius': 1000
             },
-            dataType: 'jsonp',
+            dataType: 'json',
             method: 'GET',
             success: processaLocais
         });
