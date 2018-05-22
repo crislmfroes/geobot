@@ -149,7 +149,7 @@ function initBot() {
 
     $('body > div > div > div:nth-child(2) > span').click(function () {
         $(".mytext").trigger({ type: 'keydown', which: 13, keyCode: 13 });
-    })var location = new google.maps.LatLng(-32.0332, -52.0986);
+    });
 
 
     //-- Clear Chat
