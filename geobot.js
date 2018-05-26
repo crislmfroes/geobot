@@ -1,14 +1,14 @@
 var me = {};
-me.avatar = "img/user.png";
+me.avatar = "./img/user.png";
 
 var you = {};
-you.avatar = "img/bot.png";
+you.avatar = "./img/bot.png";
 
 var WIT_TOKEN = '5BACP4L2GC3TENO3O6EDTRYNYOCAMD2R';
 
-var map;
+var map = undefined;
 
-var location = {
+var localizacao = {
     'lat': -32.0332,
     'lng': -52.0986
 };
@@ -42,13 +42,13 @@ function insertMap(options = undefined, places = []) {
             $(document).ready(function() {
                 map = new google.maps.Map(document.getElementById(id), {
                     'zoom': 11,
-                    'center': location
+                    'center': localizacao
                 });
                 if (options == 'proximidade') {
                     service = new google.maps.places.PlacesService(map);
                     for (place in places) {
                         request = {
-                            'location': location,
+                            'location': localizacao,
                             'radius': 1000,
                             'type': place.value
                         }
@@ -156,8 +156,8 @@ function initBot() {
     resetChat();
 
     navigator.geolocation.getCurrentPosition(function(position) {
-        location.lat = position.coords.latitude;
-        location.lng = position.coords.longitude;
+        localizacao.lat = position.coords.latitude;
+        localizacao.lng = position.coords.longitude;
     })
 
 }
