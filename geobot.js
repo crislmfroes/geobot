@@ -46,7 +46,8 @@ function insertMap(options = undefined, places = []) {
                 });
                 if (options == 'proximidade') {
                     service = new google.maps.places.PlacesService(map);
-                    for (place in places) {
+                    for (place of places) {
+                        console.log(place);
                         request = {
                             'location': localizacao,
                             'radius': 1000,
@@ -58,16 +59,15 @@ function insertMap(options = undefined, places = []) {
                                     createMarker(results[i], map);
                                 }
                             }
-                        })
+                        });
                     }
                 }
-            })
+            });
         }, time);
 
 }
 
 function createMarker(place, map) {
-    console.log(place);
     var marker = new google.maps.Marker({
         position: place.geometry.location,
         map: map
@@ -114,7 +114,7 @@ function resetChat() {
 }
 
 function processaDados(response) {
-    console.log(response);
+    console.log(response.entities.place);
     if (response.entities.hasOwnProperty('intent')) {
         if (response.entities.intent[0].value == 'proximidade' && response.entities.hasOwnProperty('place')) {
             insertMap('proximidade', response.entities.place);
