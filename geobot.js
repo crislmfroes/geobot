@@ -1,17 +1,34 @@
 var me = {};
-me.avatar = "./img/user.png";
-
 var you = {};
-you.avatar = "./img/bot.png";
+if (!localStorage.getItem('me')) {
+    me.avatar = "./img/user.png";
+    me.messages = [];
+} else {
+    me = JSON.parse(localStorage.getItem('me'));
+}
+
+var mapas = [];
+var mensagens = [];
+
+if (!localStorage.getItem('you')) {
+    you.avatar = "./img/bot.png";
+    you.messages = [];
+    you.maps = [];
+} else {
+    you = JSON.parse(localStorage.getItem('you'));
+}
+
+function saveLocal() {
+    if (storageAvailable('localStorage')) {
+        localStorage.setItem('me', JSON.stringify(me));
+        localStorage.setItem('you', JSON.stringify(you));
+    }
+}
+
 
 var WIT_TOKEN = '5BACP4L2GC3TENO3O6EDTRYNYOCAMD2R';
 
-var map = undefined;
-
-var localizacao = {
-    'lat': -32.0332,
-    'lng': -52.0986
-};
+var localizacao = {};
 
 function formatAMPM(date) {
     var hours = date.getHours();
@@ -24,9 +41,16 @@ function formatAMPM(date) {
     return strTime;
 }
 
-function insertMap(options = undefined, places = []) {
-    time = 0;
-    id = 'map' + Date.now();
+function insertMap(options, places, mapConfig, time, date, index, callback) {
+    if (time === undefined) {
+        time = 0;
+    }
+    if (date === undefined) {
+        date = new Date();
+    } else {
+        date = new Date(date);
+    }
+    var id = 'map' + date.getTime();
     control = '<li style="width:100%">' +
         '<div class="msj-rta macro">' +
         '<div class="text texr-r">' +
@@ -36,35 +60,50 @@ function insertMap(options = undefined, places = []) {
         '<div class="avatar"><img class="img-circle" style="width:100%;" src="' + you.avatar + '" /></div>' +
         '</div>' +
         '</li>';
-    setTimeout(
-        function () {
-            $("ul").append(control).scrollTop($("ul").prop('scrollHeight'));
-            $(document).ready(function() {
-                map = new google.maps.Map(document.getElementById(id), {
-                    'zoom': 11,
-                    'center': localizacao
-                });
-                if (options == 'proximidade') {
-                    service = new google.maps.places.PlacesService(map);
-                    for (place of places) {
-                        console.log(place);
-                        request = {
-                            'location': localizacao,
-                            'radius': 1000,
-                            'type': place.value
-                        }
-                        service.nearbySearch(request, function (results, status) {
-                            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                                for (var i = 0; i < results.length; i++) {
-                                    createMarker(results[i], map);
-                                }
-                            }
-                        });
+
+    $("ul").append(control).scrollTop($("ul").prop('scrollHeight'));
+    if (mapConfig === undefined) {
+        mapConfig = {
+            'zoom': 11,
+            'center': localizacao
+        }
+        you.maps.push({
+            'type': 'map',
+            'config': mapConfig,
+            'data': date,
+            'options': options,
+            'places': places
+        });
+        saveLocal();
+    }
+    var div = document.getElementById(id);
+    console.log(id, date, div);
+    var mapa = new google.maps.Map(div, {
+        'zoom': mapConfig.zoom,
+        'center': mapConfig.center
+    });
+    mapas.push(mapa);
+    if (options == 'proximidade') {
+        service = new google.maps.places.PlacesService(mapa);
+        console.log(places);
+        for (place of places) {
+            request = {
+                'location': localizacao,
+                'radius': 1000,
+                'type': place.value
+            }
+            service.nearbySearch(request, function (results, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    for (var i = 0; i < results.length; i++) {
+                        createMarker(results[i], mapa);
                     }
                 }
             });
-        }, time);
-
+        }
+    }
+    if (callback !== undefined) {
+        callback(index + 1);
+    }
 }
 
 function createMarker(place, map) {
@@ -75,14 +114,23 @@ function createMarker(place, map) {
 }
 
 //-- No use time. It is a javaScript effect.
-function insertChat(who, text, time) {
+function insertChat(who, text, time, save, data = new Date(), index, callback) {
     if (time === undefined) {
         time = 0;
     }
     var control = "";
-    var date = formatAMPM(new Date());
-
+    var date = formatAMPM(data);
+    var messageData = {
+        'type': 'text',
+        'text': text,
+        'data': data,
+        'who': who
+    }
     if (who == "me") {
+        if (save === true) {
+            me.messages.push(messageData);
+            saveLocal();
+        }
         control = '<li style="width:100%">' +
             '<div class="msj macro">' +
             '<div class="avatar"><img class="img-circle" style="width:100%;" src="' + me.avatar + '" /></div>' +
@@ -93,6 +141,10 @@ function insertChat(who, text, time) {
             '</div>' +
             '</li>';
     } else {
+        if (save === false) {
+            you.messages.push(messageData);
+            saveLocal();
+        }
         control = '<li style="width:100%;">' +
             '<div class="msj-rta macro">' +
             '<div class="text text-r">' +
@@ -105,16 +157,46 @@ function insertChat(who, text, time) {
     setTimeout(
         function () {
             $("ul").append(control).scrollTop($("ul").prop('scrollHeight'));
+            if (callback !== undefined) {
+                callback(index + 1);
+            }
         }, time);
+}
 
+function insertMessages(index) {
+    if (index === undefined) {
+        index = 0;
+    }
+    if (index < mensagens.length) {
+        mensagem = mensagens[index];
+        if (mensagem.type === 'text') {
+            insertChat(mensagem.who, mensagem.text, 0, false, new Date(mensagem.data), index, insertMessages);
+        }
+        if (mensagem.type === 'map') {
+            console.log(mensagem);
+            insertMap(mensagem.options, mensagem.places, mensagem.config, 0, mensagem.data, index, insertMessages);
+        }
+    }
 }
 
 function resetChat() {
     $("ul").empty();
+    navigator.geolocation.getCurrentPosition(function (position) {
+        localizacao.lat = position.coords.latitude;
+        localizacao.lng = position.coords.longitude;
+        mensagens = you.messages.concat(me.messages).concat(you.maps);
+        mensagens = mensagens.sort(function (a, b) {
+            if (new Date(a.data).getTime() < new Date(b.data).getTime()) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+        insertMessages();
+    });
 }
 
 function processaDados(response) {
-    console.log(response.entities.place);
     if (response.entities.hasOwnProperty('intent')) {
         if (response.entities.intent[0].value == 'proximidade' && response.entities.hasOwnProperty('place')) {
             insertMap('proximidade', response.entities.place);
@@ -140,7 +222,7 @@ function initBot() {
         if (e.which == 13) {
             var text = $(this).val();
             if (text !== "") {
-                insertChat("me", text);
+                insertChat("me", text, undefined, true);
                 $(this).val('');
                 processaTexto(text);
             }
@@ -155,11 +237,30 @@ function initBot() {
     //-- Clear Chat
     resetChat();
 
-    navigator.geolocation.getCurrentPosition(function(position) {
-        localizacao.lat = position.coords.latitude;
-        localizacao.lng = position.coords.longitude;
-    })
+}
 
+function storageAvailable(type) {
+    try {
+        var storage = window[type],
+            x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch (e) {
+        return e instanceof DOMException && (
+            // everything except Firefox
+            e.code === 22 ||
+            // Firefox
+            e.code === 1014 ||
+            // test name field too, because code might not be present
+            // everything except Firefox
+            e.name === 'QuotaExceededError' ||
+            // Firefox
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            storage.length !== 0;
+    }
 }
 
 
