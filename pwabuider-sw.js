@@ -14,7 +14,9 @@ self.addEventListener('install', function (event) {
         homeURL + 'geobot.js',
         homeURL + 'style.css',
         homeURL + 'offline.html',
-        homeURL + 'manifest.json'
+        homeURL + 'manifest.json',
+        homeURL + 'img/bot.png',
+        homeURL + 'img/user.png'
       ]);
     })
   );
