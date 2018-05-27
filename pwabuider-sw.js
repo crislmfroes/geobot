@@ -3,10 +3,11 @@
 //adicionar ao cache todos os arquivos estáticos
 
 var homeURL = '/geobot/';
+var CACHE_NAME = 'geobot-v1';
 
 self.addEventListener('install', function (event) {
   event.waitUntil(
-    caches.open('pwabuilder-offline').then(function (cache) {
+    caches.open(CACHE_NAME).then(function (cache) {
       return cache.addAll([
         homeURL,
         homeURL + 'index.html',
@@ -20,7 +21,6 @@ self.addEventListener('install', function (event) {
 });
 
 //Ao ativar atualiza o cache se necessário
-var CACHE_NAME = 'static-v1';
 self.addEventListener('activate', function activator(event) {
   event.waitUntil(
     caches.keys().then(function (keys) {
