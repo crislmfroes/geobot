@@ -202,6 +202,13 @@ function processaDados(response) {
             insertMap('proximidade', response.entities.place);
         }
     }
+    else {
+        insertChat('you', 'Desculpe, eu não entendi o quê você disse. Tente formular sua pergunta de outro modo.', 1000, true);
+    }
+}
+
+function onWitError(jqXHR, textStatus, errorThrow) {
+    insertChat('you', 'Zzzzz...tente acessar um ponto de acesso wifi ou comprar mais 3G para que eu acorde...', 1000, true);
 }
 
 function processaTexto(text) {
@@ -213,7 +220,8 @@ function processaTexto(text) {
         },
         dataType: 'jsonp',
         method: 'GET',
-        success: processaDados
+        success: processaDados,
+        error: onWitError
     });
 }
 
