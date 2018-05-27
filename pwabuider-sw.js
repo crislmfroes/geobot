@@ -1,19 +1,22 @@
 //This is the "Offline page" service worker
 
 //adicionar ao cache todos os arquivos estáticos
+
+var homeURL = 'https://crislmfroes.github.io/geobot/';
+
 self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open('pwabuilder-offline').then(function (cache) {
       return cache.addAll([
-        '/',
-        '/index.html',
-        '/geobot.js',
-        '/style.css',
-        '/offline.html',
-        '/manifest.json'
+        homeURL,
+        homeURL + 'index.html',
+        homeURL + 'geobot.js',
+        homeURL + 'style.css',
+        homeURL + 'offline.html',
+        homeURL + 'manifest.json'
       ]);
     })
-  )
+  );
 });
 
 //Ao ativar atualiza o cache se necessário
