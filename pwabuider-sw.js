@@ -2,7 +2,7 @@
 
 //adicionar ao cache todos os arquivos estáticos
 
-var homeURL = 'https://crislmfroes.github.io/geobot/';
+var homeURL = '';
 
 self.addEventListener('install', function (event) {
   event.waitUntil(
