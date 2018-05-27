@@ -2,7 +2,7 @@
 
 //adicionar ao cache todos os arquivos estáticos
 
-var homeURL = '/';
+var homeURL = '/geobot/';
 
 self.addEventListener('install', function (event) {
   event.waitUntil(
