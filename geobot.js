@@ -143,7 +143,7 @@ function insertChat(who, text, time, save, data = new Date(), index, callback) {
             '</div>' +
             '</li>';
     } else {
-        if (save === false) {
+        if (save === true) {
             you.messages.push(messageData);
             saveLocal();
         }
@@ -200,15 +200,15 @@ function resetChat() {
 
 function processaDados(response) {
     if (response.entities.hasOwnProperty('intent')) {
-        if (response.entities.intent[0].value === 'proximidade') {
+        if (response.entities.intent[0].value == 'proximidade') {
             if (response.entities.hasOwnProperty('place')) {
                 insertMap('proximidade', response.entities.place);
             } else {
                 insertChat('you', 'Desculpe, mas eu não entendi quais os lugares que você gostaria de consultar. Tente reformular sua frase.', 0, true);
             }
-        } else if (response.entities.intent[0].value === 'cumprimento') {
+        } else if (response.entities.intent[0].value == 'cumprimento') {
             insertChat('you', 'Olá! Me chamo GeoBot, e meus sistemas foram projetados para te ajudar a encontrar locais de interesse próximos.', 0, true);
-        } else if (response.entities.intent[0].value === 'tellmore') {
+        } else if (response.entities.intent[0].value == 'tellmore') {
             insertChat('you', 'Me diga algum tipo de lugar para o qual você precisa ir, e eu lhe mostrarei onde ele está no mapa.', 0, true);
         } else {
             insertChat('you', 'Desculpe, mas eu não sei o quê você quer dizer com isso.', 0, true);
