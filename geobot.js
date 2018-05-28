@@ -41,7 +41,7 @@ function formatAMPM(date) {
     return strTime;
 }
 
-function insertMap(options, places, mapConfig, time, date, index, callback) {
+function insertMap(options, places, mapConfig, time, date, index, callback, save) {
     if (time === undefined) {
         time = 0;
     }
@@ -82,7 +82,9 @@ function insertMap(options, places, mapConfig, time, date, index, callback) {
         'zoom': mapConfig.zoom,
         'center': mapConfig.center
     });
-    mapas.push(mapa);
+    if (save === true) {
+        mapas.push(mapa);
+    }
     if (options == 'proximidade') {
         service = new google.maps.places.PlacesService(mapa);
         console.log(places);
@@ -97,8 +99,8 @@ function insertMap(options, places, mapConfig, time, date, index, callback) {
                     for (var i = 0; i < results.length; i++) {
                         createMarker(results[i], mapa);
                     }
-                } else if (results.length === 0) {
-                    insertChat('you', 'Desculpe, mas, como você pode ver, não há nenhum estabelecimento deste tipo aqui perto.', 0, false);
+                } else if (results.length === 0 && save === true) {
+                    insertChat('you', 'Desculpe, mas, como você pode ver, não há nenhum estabelecimento deste tipo aqui perto.', 0, true);
                 }
             });
         }
