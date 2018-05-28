@@ -204,7 +204,7 @@ function processaDados(response) {
     if (response.entities.hasOwnProperty('intent')) {
         if (response.entities.intent[0].value == 'proximidade') {
             if (response.entities.hasOwnProperty('place')) {
-                insertMap('proximidade', response.entities.place);
+                insertMap('proximidade', response.entities.place, undefined, undefined, undefined, undefined, undefined, true);
             } else {
                 insertChat('you', 'Desculpe, mas eu não entendi quais os lugares que você gostaria de consultar. Tente reformular sua frase.', 0, true);
             }
