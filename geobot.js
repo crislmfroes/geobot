@@ -208,7 +208,7 @@ function processaDados(response) {
             }
         } else if (response.entities.intent[0].value === 'cumprimento') {
             insertChat('you', 'Olá! Me chamo GeoBot, e meus sistemas foram projetados para te ajudar a encontrar locais de interesse próximos.', 0, true);
-        } else if (response.entities.intent[0].value === 'contemais') {
+        } else if (response.entities.intent[0].value === 'tellmore') {
             insertChat('you', 'Me diga algum tipo de lugar para o qual você precisa ir, e eu lhe mostrarei onde ele está no mapa.', 0, true);
         } else {
             insertChat('you', 'Desculpe, mas eu não sei o quê você quer dizer com isso.', 0, true);
