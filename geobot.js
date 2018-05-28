@@ -93,10 +93,12 @@ function insertMap(options, places, mapConfig, time, date, index, callback) {
                 'type': place.value
             }
             service.nearbySearch(request, function (results, status) {
-                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                if (status == google.maps.places.PlacesServiceStatus.OK && results.length > 0) {
                     for (var i = 0; i < results.length; i++) {
                         createMarker(results[i], mapa);
                     }
+                } else if (results.length === 0) {
+                    insertChat('you', 'Desculpe, mas, como você pode ver, não há nenhum estabelecimento deste tipo aqui perto.', 0, false);
                 }
             });
         }
@@ -198,8 +200,18 @@ function resetChat() {
 
 function processaDados(response) {
     if (response.entities.hasOwnProperty('intent')) {
-        if (response.entities.intent[0].value == 'proximidade' && response.entities.hasOwnProperty('place')) {
-            insertMap('proximidade', response.entities.place);
+        if (response.entities.intent[0].value === 'proximidade') {
+            if (response.entities.hasOwnProperty('place')) {
+                insertMap('proximidade', response.entities.place);
+            } else {
+                insertChat('you', 'Desculpe, mas eu não entendi quais os lugares que você gostaria de consultar. Tente reformular sua frase.', 0, true);
+            }
+        } else if (response.entities.intent[0].value === 'cumprimento') {
+            insertChat('you', 'Olá! Me chamo GeoBot, e meus sistemas foram projetados para te ajudar a encontrar locais de interesse próximos.', 0, true);
+        } else if (response.entities.intent[0].value === 'contemais') {
+            insertChat('you', 'Me diga algum tipo de lugar para o qual você precisa ir, e eu lhe mostrarei onde ele está no mapa.', 0, true);
+        } else {
+            insertChat('you', 'Desculpe, mas eu não sei o quê você quer dizer com isso.', 0, true);
         }
     }
     else {
